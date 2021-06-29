@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+import socket
 from disk_usage import check_disk_full
 from cpu_usage import check_cpu_usage
 
@@ -18,11 +19,20 @@ def check_cpu_overloaded():
     """Returns True if the CPU usage is over 75% of its capability"""
     return check_cpu_usage(75)
 
+def check_no_network():
+    """Returns True if it fails to resolve Google's URL, False otherwise"""
+    try:
+        socket.gethostbyname("www.google.com")
+        return False
+    except:
+        return True
+
 def main():
     checks = [
         (check_reboot, "Pending Reboot!"),
         (check_root_full, "Root partition is full!"),
-        (check_cpu_overloaded, "CPU is overloaded!")
+        (check_cpu_overloaded, "CPU is overloaded!"),
+        (check_no_network, "No working network!")
     ]
 
     everything_ok = True
