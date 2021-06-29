@@ -2,6 +2,7 @@
 import os
 import sys
 from disk_usage import check_disk_full
+from cpu_usage import check_cpu_usage
 
 def check_reboot():
     """Returns True if the computer has a pending reboot."""
@@ -13,11 +14,15 @@ def check_root_full():
     # Chcek for at least 2 GB and 10% free
     return check_disk_full(disk="/", min_gb=2, min_percent=10)
 
+def check_cpu_overloaded():
+    """Returns True if the CPU usage is over 75% of its capability"""
+    return check_cpu_usage(75)
 
 def main():
     checks = [
-        (check_reboot, "Pending Reboot"),
-        (check_root_full, "Root partition is full"),
+        (check_reboot, "Pending Reboot!"),
+        (check_root_full, "Root partition is full!"),
+        (check_cpu_overloaded, "CPU is overloaded!")
     ]
 
     everything_ok = True
