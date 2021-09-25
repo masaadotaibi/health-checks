@@ -1,7 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 import os
 import sys
 import socket
+
+import server_connectivity as sconnect
 from disk_usage import check_disk_full
 from cpu_usage import check_cpu_usage
 
@@ -19,20 +22,16 @@ def check_cpu_overloaded():
     """Returns True if the CPU usage is over 75% of its capability"""
     return check_cpu_usage(75)
 
-def check_no_network():
-    """Returns True if it fails to resolve Google's URL, False otherwise"""
-    try:
-        socket.gethostbyname("www.google.com")
-        return False
-    except:
-        return True
+def check_server_connection():
+    # check if localhost server is running and google service is connected
+    return sconnect.check_localhost() == sconnect.check_connectivity()
 
 def main():
     checks = [
         (check_reboot, "Pending Reboot!"),
         (check_root_full, "Root partition is full!"),
         (check_cpu_overloaded, "CPU is overloaded!"),
-        (check_no_network, "No working network!")
+        (check_server_connection, "There is connection issues!")
     ]
 
     everything_ok = True
